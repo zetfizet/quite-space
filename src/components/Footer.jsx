@@ -25,7 +25,7 @@ export default function Footer() {
           <div>
             <h4>Untuk Mitra</h4>
             <ul>
-              <li><Link href="#">Daftar Mitra</Link></li>
+              <li><Link href="/partners">Daftar Mitra</Link></li>
               <li><Link href="#">Dashboard</Link></li>
               <li><Link href="#">Promosi</Link></li>
               <li><Link href="#">Statistik</Link></li>
@@ -34,7 +34,7 @@ export default function Footer() {
           <div>
             <h4>Lainnya</h4>
             <ul>
-              <li><Link href="#">Tentang Kami</Link></li>
+              <li><Link href="/about">Tentang Kami</Link></li>
               <li><Link href="#">Privacy Policy</Link></li>
               <li><Link href="#">Terms of Service</Link></li>
               <li><Link href="#">Kontak</Link></li>

@@ -100,7 +100,7 @@ export default function Home() {
           <div className="section-header">
             <div className="section-label">Pilihan Mahasiswa</div>
             <h2 className="section-title">Tempat Nugas Favorit Sekitar Kampus</h2>
-            <p className="section-subtitle">Rekomendasi cafe dan coworking space terbaik yang paling sering dikunjungi mahasiswa ITS dan UNAIR Surabaya.</p>
+            <p className="section-subtitle">Rekomendasi cafe dan coworking space terbaik yang paling sering dikunjungi mahasiswa ITS and UNAIR Surabaya.</p>
           </div>
           <div className="places-grid">
             {placesData.filter(p => p.address.includes('ITS') || p.address.includes('UNAIR') || p.address.includes('Keputih') || p.address.includes('Dharmawangsa')).slice(0, 6).map(place => (
@@ -168,7 +168,7 @@ export default function Home() {
         <div className="container">
           <h2>Punya Cafe atau Coworking Space?</h2>
           <p>Daftarkan tempatmu di QuietSpace dan jangkau ribuan mahasiswa serta pekerja remote yang mencari tempat produktif setiap harinya.</p>
-          <Link href="#" className="cta-mitra-btn">Daftar Sebagai Mitra</Link>
+          <Link href="/partners" className="cta-mitra-btn">Daftar Sebagai Mitra</Link>
         </div>
       </section>
     </main>

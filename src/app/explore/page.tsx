@@ -14,6 +14,17 @@ function ExploreContent() {
   const [noiseFilter, setNoiseFilter] = useState({ 1: false, 2: false, 3: false, 4: false });
   const [categoryFilter, setCategoryFilter] = useState({ 'Coffee Shop': false, 'Coworking Space': false, 'Cafe & Library': false });
   const [facilityFilter, setFacilityFilter] = useState({ powerOutlet: false, wifi: false, ac: false });
+  const [showFiltersMobile, setShowFiltersMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (q) {
@@ -64,7 +75,7 @@ function ExploreContent() {
     <>
       {/* HERO SECTION - CLEAN AND MINIMAL */}
       <section style={{ paddingTop: '160px', paddingBottom: '60px', background: 'var(--cream)', borderBottom: '1px solid var(--gray-200)' }}>
-        <div className="container">
+        <div className="container-wide">
           <div style={{ maxWidth: '700px', margin: '0 auto', textAlign: 'center' }}>
             <h1 style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--gray-900)', marginBottom: '16px', letterSpacing: '-0.02em' }}>
               Eksplorasi Tempat
@@ -96,87 +107,130 @@ function ExploreContent() {
 
       {/* EXPLORE LAYOUT */}
       <section className="section" style={{ paddingTop: '60px', background: 'var(--white)' }}>
-        <div className="container">
+        <div className="container-wide">
           <div className="explore-layout">
             
             {/* ELEGANT SIDEBAR FILTER */}
-            <aside style={{ position: 'sticky', top: '100px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px' }}>
-                <SlidersHorizontal size={20} color="var(--gray-800)" />
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--gray-900)', letterSpacing: '-0.01em' }}>Filter</h3>
-              </div>
-              
-              <div style={{ marginBottom: '32px' }}>
-                <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>Tingkat Kebisingan</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {[
-                    { id: 1, label: 'Sangat Sunyi (Skala 1)' },
-                    { id: 2, label: 'Sunyi (Skala 2)' },
-                    { id: 3, label: 'Sedang (Skala 3)' },
-                    { id: 4, label: 'Ramai (Skala 4)' }
-                  ].map(item => (
-                    <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', fontSize: '0.95rem', color: 'var(--gray-700)', transition: 'color 0.2s' }}>
-                      <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${noiseFilter[item.id as keyof typeof noiseFilter] ? 'var(--green-primary)' : 'var(--gray-300)'}`, background: noiseFilter[item.id as keyof typeof noiseFilter] ? 'var(--green-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
-                        {noiseFilter[item.id as keyof typeof noiseFilter] && <Check size={14} color="white" />}
-                      </div>
-                      <input type="checkbox" checked={noiseFilter[item.id as keyof typeof noiseFilter]} onChange={() => handleNoiseChange(item.id)} style={{ display: 'none' }} /> 
-                      {item.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '32px' }}>
-                <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>Kategori Tempat</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {[
-                    { id: 'Coffee Shop', label: 'Coffee Shop' },
-                    { id: 'Coworking Space', label: 'Coworking Space' },
-                    { id: 'Cafe & Library', label: 'Cafe & Library' }
-                  ].map(item => (
-                    <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', fontSize: '0.95rem', color: 'var(--gray-700)', transition: 'color 0.2s' }}>
-                      <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${categoryFilter[item.id as keyof typeof categoryFilter] ? 'var(--green-primary)' : 'var(--gray-300)'}`, background: categoryFilter[item.id as keyof typeof categoryFilter] ? 'var(--green-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
-                        {categoryFilter[item.id as keyof typeof categoryFilter] && <Check size={14} color="white" />}
-                      </div>
-                      <input type="checkbox" checked={categoryFilter[item.id as keyof typeof categoryFilter]} onChange={() => handleCatChange(item.id)} style={{ display: 'none' }} /> 
-                      {item.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '40px' }}>
-                <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>Fasilitas Wajib</h4>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  {[
-                    { id: 'powerOutlet', label: 'Colokan Listrik Banyak' },
-                    { id: 'wifi', label: 'WiFi Kencang' },
-                    { id: 'ac', label: 'Ruangan Ber-AC' }
-                  ].map(item => (
-                    <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', fontSize: '0.95rem', color: 'var(--gray-700)', transition: 'color 0.2s' }}>
-                      <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${facilityFilter[item.id as keyof typeof facilityFilter] ? 'var(--green-primary)' : 'var(--gray-300)'}`, background: facilityFilter[item.id as keyof typeof facilityFilter] ? 'var(--green-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
-                        {facilityFilter[item.id as keyof typeof facilityFilter] && <Check size={14} color="white" />}
-                      </div>
-                      <input type="checkbox" checked={facilityFilter[item.id as keyof typeof facilityFilter]} onChange={() => handleFacChange(item.id)} style={{ display: 'none' }} /> 
-                      {item.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <button 
-                style={{ width: '100%', padding: '14px', background: 'transparent', color: 'var(--gray-500)', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: '0.95rem', transition: 'all 0.2s', border: '1px solid var(--gray-200)', cursor: 'pointer' }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--gray-50)'; e.currentTarget.style.color = 'var(--gray-800)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--gray-500)'; }}
-                onClick={() => {
-                  setNoiseFilter({ 1: false, 2: false, 3: false, 4: false });
-                  setCategoryFilter({ 'Coffee Shop': false, 'Coworking Space': false, 'Cafe & Library': false });
-                  setFacilityFilter({ powerOutlet: false, wifi: false, ac: false });
-                  setSearchQuery('');
+            <aside style={{ position: isMobile ? 'relative' : 'sticky', top: isMobile ? '0' : '100px', zIndex: isMobile ? 10 : 1 }}>
+              <div 
+                className="mobile-filter-toggle"
+                onClick={() => setShowFiltersMobile(!showFiltersMobile)}
+                style={{ 
+                  display: isMobile ? 'flex' : 'none', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between', 
+                  gap: '8px', 
+                  marginBottom: showFiltersMobile ? '12px' : '24px',
+                  padding: '16px',
+                  background: 'var(--white)',
+                  border: '1px solid var(--gray-200)',
+                  borderRadius: 'var(--radius-md)',
+                  boxShadow: 'var(--shadow-sm)',
+                  cursor: 'pointer'
                 }}
               >
-                Hapus Semua Filter
-              </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <SlidersHorizontal size={18} color="var(--gray-800)" />
+                  <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--gray-800)' }}>
+                    {showFiltersMobile ? 'Sembunyikan Filter' : 'Tampilkan Filter'}
+                  </span>
+                </div>
+                <span style={{ fontSize: '0.8rem', background: 'var(--green-tint)', color: 'var(--green-primary)', padding: '2px 8px', borderRadius: 'var(--radius-full)', fontWeight: 700 }}>
+                  {Object.values(noiseFilter).filter(Boolean).length + 
+                   Object.values(categoryFilter).filter(Boolean).length + 
+                   Object.values(facilityFilter).filter(Boolean).length} Aktif
+                </span>
+              </div>
+
+              <div 
+                className={`filter-body ${showFiltersMobile ? 'show' : ''}`}
+                style={{ 
+                  display: isMobile && !showFiltersMobile ? 'none' : 'block',
+                  background: isMobile ? 'var(--white)' : 'transparent',
+                  padding: isMobile ? '24px' : '0',
+                  borderRadius: isMobile ? 'var(--radius-md)' : '0',
+                  border: isMobile ? '1px solid var(--gray-200)' : 'none',
+                  boxShadow: isMobile ? 'var(--shadow-md)' : 'none',
+                  marginBottom: isMobile ? '32px' : '0'
+                }}
+              >
+                <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px' }} className="desktop-filter-header">
+                  <SlidersHorizontal size={20} color="var(--gray-800)" />
+                  <h3 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--gray-900)', letterSpacing: '-0.01em' }}>Filter</h3>
+                </div>
+                
+                <div style={{ marginBottom: '32px' }}>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>Tingkat Kebisingan</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      { id: 1, label: 'Sangat Sunyi (Skala 1)' },
+                      { id: 2, label: 'Sunyi (Skala 2)' },
+                      { id: 3, label: 'Sedang (Skala 3)' },
+                      { id: 4, label: 'Ramai (Skala 4)' }
+                    ].map(item => (
+                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', fontSize: '0.95rem', color: 'var(--gray-700)', transition: 'color 0.2s' }}>
+                        <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${noiseFilter[item.id as keyof typeof noiseFilter] ? 'var(--green-primary)' : 'var(--gray-300)'}`, background: noiseFilter[item.id as keyof typeof noiseFilter] ? 'var(--green-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
+                          {noiseFilter[item.id as keyof typeof noiseFilter] && <Check size={14} color="white" />}
+                        </div>
+                        <input type="checkbox" checked={noiseFilter[item.id as keyof typeof noiseFilter]} onChange={() => handleNoiseChange(item.id)} style={{ display: 'none' }} /> 
+                        {item.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '32px' }}>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>Kategori Tempat</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      { id: 'Coffee Shop', label: 'Coffee Shop' },
+                      { id: 'Coworking Space', label: 'Coworking Space' },
+                      { id: 'Cafe & Library', label: 'Cafe & Library' }
+                    ].map(item => (
+                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', fontSize: '0.95rem', color: 'var(--gray-700)', transition: 'color 0.2s' }}>
+                        <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${categoryFilter[item.id as keyof typeof categoryFilter] ? 'var(--green-primary)' : 'var(--gray-300)'}`, background: categoryFilter[item.id as keyof typeof categoryFilter] ? 'var(--green-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
+                          {categoryFilter[item.id as keyof typeof categoryFilter] && <Check size={14} color="white" />}
+                        </div>
+                        <input type="checkbox" checked={categoryFilter[item.id as keyof typeof categoryFilter]} onChange={() => handleCatChange(item.id)} style={{ display: 'none' }} /> 
+                        {item.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '40px' }}>
+                  <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--gray-400)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>Fasilitas Wajib</h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      { id: 'powerOutlet', label: 'Colokan Listrik Banyak' },
+                      { id: 'wifi', label: 'WiFi Kencang' },
+                      { id: 'ac', label: 'Ruangan Ber-AC' }
+                    ].map(item => (
+                      <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', fontSize: '0.95rem', color: 'var(--gray-700)', transition: 'color 0.2s' }}>
+                        <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: `2px solid ${facilityFilter[item.id as keyof typeof facilityFilter] ? 'var(--green-primary)' : 'var(--gray-300)'}`, background: facilityFilter[item.id as keyof typeof facilityFilter] ? 'var(--green-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
+                          {facilityFilter[item.id as keyof typeof facilityFilter] && <Check size={14} color="white" />}
+                        </div>
+                        <input type="checkbox" checked={facilityFilter[item.id as keyof typeof facilityFilter]} onChange={() => handleFacChange(item.id)} style={{ display: 'none' }} /> 
+                        {item.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <button 
+                  style={{ width: '100%', padding: '14px', background: 'transparent', color: 'var(--gray-500)', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: '0.95rem', transition: 'all 0.2s', border: '1px solid var(--gray-200)', cursor: 'pointer' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--gray-50)'; e.currentTarget.style.color = 'var(--gray-800)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--gray-500)'; }}
+                  onClick={() => {
+                    setNoiseFilter({ 1: false, 2: false, 3: false, 4: false });
+                    setCategoryFilter({ 'Coffee Shop': false, 'Coworking Space': false, 'Cafe & Library': false });
+                    setFacilityFilter({ powerOutlet: false, wifi: false, ac: false });
+                    setSearchQuery('');
+                  }}
+                >
+                  Hapus Semua Filter
+                </button>
+              </div>
             </aside>
 
             {/* MAIN CONTENT GRID */}
